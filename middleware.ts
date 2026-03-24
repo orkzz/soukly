@@ -1,6 +1,5 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest, NextResponse } from 'next/server';
-import { updateSession } from '@/lib/supabase/middleware';
+import { NextRequest } from 'next/server';
 
 const intlMiddleware = createMiddleware({
   locales: ['ar', 'fr', 'en'],
@@ -8,14 +7,8 @@ const intlMiddleware = createMiddleware({
   localePrefix: 'always',
 });
 
-export async function middleware(request: NextRequest) {
-  const intlResponse = intlMiddleware(request);
-
-  if (intlResponse.status !== 200) {
-    return intlResponse;
-  }
-
-  return updateSession(request);
+export function middleware(request: NextRequest) {
+  return intlMiddleware(request);
 }
 
 export const config = {
