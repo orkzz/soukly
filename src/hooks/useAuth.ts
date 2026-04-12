@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useMemo } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -9,7 +9,10 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
+  const pathname = usePathname();
+  const supabase = useMemo(() => createClient(), []);
+
+  const locale = pathname?.split('/')[1] || 'fr';
 
   useEffect(() => {
     const getUser = async () => {
@@ -26,12 +29,12 @@ export function useAuth() {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, [supabase]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
-    router.push('/fr/auth/login');
+    router.push(`/${locale}/auth/login`);
     router.refresh();
   };
 

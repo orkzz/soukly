@@ -50,7 +50,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/${locale}/dashboard`,
+        redirectTo: `${window.location.origin}/api/auth/callback?next=/${locale}/dashboard`,
       },
     });
   };
